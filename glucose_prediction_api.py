@@ -149,3 +149,76 @@ def estimate_hours_since_meal(food_meal):
         return 2   # Asumiendo ~2 horas desde la comida principal
     else:
         return 3   # Valor predeterminado
+
+# Añadir rutas de la API
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({
+        "message": "API de Predicción de Glucosa",
+        "endpoints": {
+            "/predict": "POST - Realizar predicción de glucosa",
+            "/health": "GET - Verificar estado de la API"
+        }
+    })
+
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({"status": "healthy"})
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    global model
+    
+    # Cargar modelo si no está cargado
+    if model is None:
+        model = load_or_create_model()
+    
+    # Obtener datos de la solicitud
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No se proporcionaron datos"}), 400
+    
+    try:
+        # Preparar datos para el modelo
+        input_data = prepare_input_data(data)
+        
+        # Realizar predicción
+        prediction = model.predict(input_data)[0]
+        
+        # Calcular confianza (simplificado)
+        confidence = 0.85  # Valor de ejemplo
+        
+        # Generar recomendación basada en la predicción
+        recommendation = generate_recommendation(prediction, data.get('currentGlucose', 120))
+        
+        return jsonify({
+            "prediction": round(float(prediction), 1),
+            "confidence": confidence,
+            "recommendation": recommendation,
+            "input_processed": {
+                "glucose": input_data['current_glucose'][0],
+                "carbs": input_data['carbohydrates'][0],
+                "gi": input_data['glycemic_index'][0]
+            }
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+def generate_recommendation(predicted_glucose, current_glucose):
+    if predicted_glucose > 180:
+        return "La glucosa predicha es alta. Considera reducir la porción o elegir alimentos con menor índice glucémico."
+    elif predicted_glucose < 70:
+        return "La glucosa predicha es baja. Considera añadir más carbohidratos a tu comida."
+    else:
+        return "La glucosa predicha está en un rango adecuado."
+
+# Para despliegue en Render
+if __name__ == '__main__':
+    # Cargar el modelo al iniciar
+    model = load_or_create_model()
+    
+    # Obtener puerto del entorno (Render lo proporciona) o usar 5000 por defecto
+    port = int(os.environ.get('PORT', 5000))
+    
+    # Ejecutar la aplicación
+    app.run(host='0.0.0.0', port=port)
