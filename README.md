@@ -86,18 +86,11 @@ La API estará disponible en http://localhost:5000
 
 ## Despliegue
 
-Este proyecto está configurado para despliegue en Render o Heroku.
+Este proyecto está configurado para despliegue en Render.
 
 ### Render
 
 Simplemente conecta este repositorio a Render y usa la configuración en `render.yaml`.
-
-### Heroku
-
-```bash
-heroku create
-git push heroku main
-```
 
 ## Licencia
 

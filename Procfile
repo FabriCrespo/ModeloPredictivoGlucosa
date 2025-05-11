@@ -1,1 +1,0 @@
-web: gunicorn glucose_prediction_api:app
