@@ -1,0 +1,158 @@
+[
+  {
+    "timestamp": "2025-06-13T20:48:02.328322",
+    "input_data": {
+      "current_glucose": 225.0,
+      "carbohydrates": 50,
+      "glycemic_index": 55,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 6
+    },
+    "prediction": 175.65,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:49:42.210061",
+    "input_data": {
+      "current_glucose": 246.0,
+      "carbohydrates": 50,
+      "glycemic_index": 55,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 6
+    },
+    "prediction": 175.65,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:49:48.716907",
+    "input_data": {
+      "current_glucose": 145.0,
+      "carbohydrates": 60,
+      "glycemic_index": 60,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 4
+    },
+    "prediction": 164.9,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:49:55.114753",
+    "input_data": {
+      "current_glucose": 75.0,
+      "carbohydrates": 60,
+      "glycemic_index": 60,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 4
+    },
+    "prediction": 143.8,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:49:58.222840",
+    "input_data": {
+      "current_glucose": 35.0,
+      "carbohydrates": 60,
+      "glycemic_index": 60,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 4
+    },
+    "prediction": 143.8,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:49:59.736914",
+    "input_data": {
+      "current_glucose": 35.0,
+      "carbohydrates": 60,
+      "glycemic_index": 60,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 4
+    },
+    "prediction": 143.8,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:50:00.907369",
+    "input_data": {
+      "current_glucose": 35.0,
+      "carbohydrates": 60,
+      "glycemic_index": 60,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 4
+    },
+    "prediction": 143.8,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:50:04.078958",
+    "input_data": {
+      "current_glucose": 35.0,
+      "carbohydrates": 40,
+      "glycemic_index": 65,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 10
+    },
+    "prediction": 141.15,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:50:09.388473",
+    "input_data": {
+      "current_glucose": 182.0,
+      "carbohydrates": 40,
+      "glycemic_index": 65,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 10
+    },
+    "prediction": 173.75,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:51:42.361969",
+    "input_data": {
+      "current_glucose": 25.0,
+      "carbohydrates": 40,
+      "glycemic_index": 65,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 10
+    },
+    "prediction": 141.15,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:55:19.607207",
+    "input_data": {
+      "current_glucose": 135.0,
+      "carbohydrates": 40,
+      "glycemic_index": 65,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 10
+    },
+    "prediction": 150.6,
+    "actual_glucose": null
+  },
+  {
+    "timestamp": "2025-06-13T20:55:25.088035",
+    "input_data": {
+      "current_glucose": 156.0,
+      "carbohydrates": 40,
+      "glycemic_index": 65,
+      "diabetes_type": "tipo1",
+      "time_of_day": "noche",
+      "hours_since_last_meal": 10
+    },
+    "prediction": 166.1,
+    "actual_glucose": null
+  }
+]

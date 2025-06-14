@@ -116,38 +116,53 @@ model = None
 
 # Preparar datos de entrada para el modelo
 def prepare_input_data(data):
-    # Extraer valores o usar valores predeterminados
-    current_glucose = data.get('currentGlucose', 120)
-    food_meal = data.get('foodMeal', '').lower()
-    food_eaten = data.get('foodEaten', '')
-    diabetes_type = data.get('userInfo', {}).get('diabetesType', 'Tipo 2')
-    
-    # Estimar carbohidratos y índice glucémico basado en la comida
-    carbs, gi = estimate_food_values(food_eaten, food_meal)
-    
-    # Determinar hora del día
-    now = datetime.now()
-    if now.hour < 12:
-        time_of_day = 'mañana'
-    elif now.hour < 18:
-        time_of_day = 'tarde'
-    else:
-        time_of_day = 'noche'
-    
-    # Estimar horas desde última comida
-    hours_since_meal = estimate_hours_since_meal(food_meal)
-    
-    # Crear DataFrame con los datos de entrada
-    input_df = pd.DataFrame({
-        'current_glucose': [current_glucose],
-        'carbohydrates': [carbs],
-        'glycemic_index': [gi],
-        'diabetes_type': [diabetes_type],
-        'time_of_day': [time_of_day],
-        'hours_since_last_meal': [hours_since_meal]
-    })
-    
-    return input_df
+    try:
+        # Validar datos requeridos
+        if not data.get('currentGlucose'):
+            raise ValueError("El nivel de glucosa actual es requerido")
+        if not data.get('foodMeal'):
+            raise ValueError("El tipo de comida es requerido")
+        if not data.get('foodEaten'):
+            raise ValueError("La descripción de la comida es requerida")
+        if not data.get('userInfo', {}).get('userId'):
+            raise ValueError("El ID del usuario es requerido")
+        if not data.get('userInfo', {}).get('diabetesType'):
+            raise ValueError("El tipo de diabetes es requerido")
+
+        # Extraer valores
+        current_glucose = float(data['currentGlucose'])
+        food_meal = data['foodMeal'].lower()
+        food_eaten = data['foodEaten'].strip()
+        diabetes_type = data['userInfo']['diabetesType'].lower()
+        
+        # Estimar carbohidratos y índice glucémico basado en la comida
+        carbs, gi = estimate_food_values(food_eaten, food_meal)
+        
+        # Determinar hora del día
+        now = datetime.now()
+        if now.hour < 12:
+            time_of_day = 'mañana'
+        elif now.hour < 18:
+            time_of_day = 'tarde'
+        else:
+            time_of_day = 'noche'
+        
+        # Estimar horas desde última comida
+        hours_since_meal = estimate_hours_since_meal(food_meal)
+        
+        # Crear DataFrame con los datos de entrada
+        input_df = pd.DataFrame({
+            'current_glucose': [current_glucose],
+            'carbohydrates': [carbs],
+            'glycemic_index': [gi],
+            'diabetes_type': [diabetes_type],
+            'time_of_day': [time_of_day],
+            'hours_since_last_meal': [hours_since_meal]
+        })
+        
+        return input_df
+    except Exception as e:
+        raise ValueError(f"Error al preparar datos de entrada: {str(e)}")
 
 # Estimar valores nutricionales basados en la comida
 def estimate_food_values(food_eaten, food_meal):
@@ -294,32 +309,39 @@ class Predict(Resource):
             return {"error": "No se proporcionaron datos"}, 400
         
         try:
-            user_id = data['userInfo']['userId']
+            # Validar datos requeridos
+            if not data.get('userInfo', {}).get('userId'):
+                return {"error": "El ID del usuario es requerido"}, 400
+            
+            # Preparar datos de entrada
             input_data = prepare_input_data(data)
             
             # Cargar modelo específico del usuario
-            model = load_or_create_user_model(user_id)
+            model = load_or_create_user_model(data['userInfo']['userId'])
             prediction = model.predict(input_data)[0]
             
             # Guardar datos de la predicción
-            save_user_data(user_id, input_data, prediction)
+            save_user_data(data['userInfo']['userId'], input_data, prediction)
             
-            confidence = 0.85
-            recommendation = generate_recommendation(prediction, data.get('currentGlucose', 120))
-            
-            return {
+            # Generar respuesta
+            response = {
                 "prediction": round(float(prediction), 1),
-                "confidence": confidence,
-                "recommendation": recommendation,
+                "confidence": 0.85,
+                "recommendation": generate_recommendation(prediction, float(data['currentGlucose'])),
                 "input_processed": {
-                    "glucose": input_data['current_glucose'][0],
-                    "carbs": input_data['carbohydrates'][0],
-                    "gi": input_data['glycemic_index'][0]
+                    "glucose": float(input_data['current_glucose'][0]),
+                    "carbs": float(input_data['carbohydrates'][0]),
+                    "gi": float(input_data['glycemic_index'][0])
                 },
                 "predictionId": datetime.now().isoformat()
             }
+            
+            return response, 200
+            
+        except ValueError as e:
+            return {"error": str(e)}, 400
         except Exception as e:
-            return {"error": str(e)}, 500
+            return {"error": f"Error al procesar la predicción: {str(e)}"}, 500
 
 @ns.route('/feedback')
 class Feedback(Resource):
